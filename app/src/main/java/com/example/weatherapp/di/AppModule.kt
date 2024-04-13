@@ -3,7 +3,9 @@ package com.example.weatherapp.di
 import DefaultLocationTracker
 import android.app.Application
 import android.content.Context
+import android.location.Geocoder
 import androidx.room.Room
+import com.example.weatherapp.data.geocoder.GeoCoding
 import com.example.weatherapp.data.local.QueryDao
 import com.example.weatherapp.data.local.WeatherDatabase
 import com.example.weatherapp.data.remote.WeatherApi
@@ -87,7 +89,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGetLocationAndCityName(location: LocationTracker, @ApplicationContext context: Context): GetUserLocationAndCityNameUseCase {
-        return GetUserLocationAndCityNameUseCase(location,context)
+    fun provideGetLocationAndCityName(location: LocationTracker, geoCoding: GeoCoding): GetUserLocationAndCityNameUseCase {
+        return GetUserLocationAndCityNameUseCase(location,geoCoding)
+    }
+    @Singleton
+    @Provides
+    fun getGeoCoding( @ApplicationContext context: Context): GeoCoding {
+        return GeoCoding(Geocoder(context))
     }
 }

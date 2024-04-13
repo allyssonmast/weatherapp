@@ -1,5 +1,7 @@
 package com.example.weatherapp.ui.screens
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
@@ -7,8 +9,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import com.example.weatherapp.domain.usecase.GetConnectivity
 import com.example.weatherapp.domain.usecase.GetUserLocationAndCityNameUseCase
 import com.example.weatherapp.util.Resource
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,18 +20,23 @@ class WeatherViewModel @Inject constructor(
     private val getUserLocation: GetUserLocationAndCityNameUseCase
     ) : ViewModel() {
 
-    private val _weatherState = MutableStateFlow(WeatherState(isLoading = true))
-    val weatherState: StateFlow<WeatherState> = _weatherState
+    private val _weatherState = mutableStateOf(WeatherState(isLoading = true))
+    val weatherState: State<WeatherState> = _weatherState
 
-    fun onStartApplication() {
+    init {
+        onStartApplication()
+        print("iniciou")
+    }
+    private fun onStartApplication() {
         viewModelScope.launch {
-            if (!getConnectivity.isConnected()) {
+            val isConnected = getConnectivity.isConnected()
+            if (!isConnected) {
                 _weatherState.value = WeatherState(error = "No internet connection")
                 return@launch
             }
-            val (_,query) = getUserLocation()
-            if(query!=null)
-                getWeatherByName(query)
+            val query = getUserLocation()
+            val que= query
+
         }
     }
     fun getWeatherByName (query: String){

@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             WeatherAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.primary
                 ) {
                     val navController = rememberNavController()
                     NavHost(
@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                             route = Screen.WeatherScreen.route
                         ){
                             val viewModel = hiltViewModel<WeatherViewModel>()
-                            val state: WeatherState by viewModel.weatherState.collectAsState()
+                            val state: WeatherState by viewModel.weatherState
 
                             WeatherScreen(
                                 navController = navController,
