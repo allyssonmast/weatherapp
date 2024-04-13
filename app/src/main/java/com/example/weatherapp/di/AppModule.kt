@@ -1,13 +1,17 @@
 package com.example.weatherapp.di
 
+import DefaultLocationTracker
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.weatherapp.data.local.QueryDao
 import com.example.weatherapp.data.local.WeatherDatabase
 import com.example.weatherapp.data.remote.WeatherApi
+import com.example.weatherapp.data.remote.model.Location
 import com.example.weatherapp.data.repository.WeatherRepositoryImp
+import com.example.weatherapp.domain.location.LocationTracker
 import com.example.weatherapp.domain.repository.WeatherRepository
+import com.example.weatherapp.domain.usecase.GetUserLocationAndCityNameUseCase
 import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
 import com.example.weatherapp.util.ApiConstants
 import com.example.weatherapp.util.connetivity.AppStatus
@@ -18,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -70,7 +75,19 @@ object AppModule {
     }
     @Provides
     @Singleton
-    fun provideGetTables(repository: WeatherRepository): SearchWeatherUsecase {
+    fun provideSearchWeatherUsecase(repository: WeatherRepository): SearchWeatherUsecase {
         return SearchWeatherUsecase(repository)
+    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Provides
+    @Singleton
+    fun provideLocationTracker(locationClient: FusedLocationProviderClient, application: Application): LocationTracker {
+        return DefaultLocationTracker(locationClient,application)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetLocationAndCityName(location: LocationTracker, @ApplicationContext context: Context): GetUserLocationAndCityNameUseCase {
+        return GetUserLocationAndCityNameUseCase(location,context)
     }
 }
