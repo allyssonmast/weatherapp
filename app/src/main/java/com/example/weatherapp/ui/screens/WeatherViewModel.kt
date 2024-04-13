@@ -29,7 +29,7 @@ class WeatherViewModel @Inject constructor(
                 _weatherState.value = WeatherState(error = "No internet connection")
                 return@launch
             }
-            val (location,query) = getUserLocation()
+            val (_,query) = getUserLocation()
             if(query!=null)
                 getWeatherByName(query)
         }
