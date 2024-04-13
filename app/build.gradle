@@ -12,12 +12,12 @@ def apiKey = properties.getProperty("API_KEY") ?: ""
 
 android {
     namespace 'com.example.weatherapp'
-    compileSdk 34
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.example.weatherapp"
         minSdk 21
-        targetSdk 34
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -68,6 +68,7 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:2.3.0"
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     kapt "androidx.room:room-compiler:2.3.0"
     implementation "androidx.room:room-ktx:2.3.0"
 

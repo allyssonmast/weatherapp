@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class SearchWeatherUsecase @Inject constructor(private val weatherRepository: WeatherRepository ){
-    fun invoke(query: String): Flow<Resource<Weather>> {
+    operator fun invoke(query: String): Flow<Resource<Weather>> {
         return if (query.isNotBlank()) {
             weatherRepository.getWeather(query)
         } else {

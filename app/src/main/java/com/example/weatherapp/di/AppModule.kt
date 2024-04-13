@@ -1,13 +1,22 @@
 package com.example.weatherapp.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
+import com.example.weatherapp.data.local.QueryDao
 import com.example.weatherapp.data.local.WeatherDatabase
 import com.example.weatherapp.data.remote.WeatherApi
+import com.example.weatherapp.data.repository.WeatherRepositoryImp
+import com.example.weatherapp.domain.repository.WeatherRepository
+import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
 import com.example.weatherapp.util.ApiConstants
+import com.example.weatherapp.util.connetivity.AppStatus
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -15,7 +24,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+object AppModule {
     @Provides
     @Singleton//just one instance
     fun providePaprikaApi(): WeatherApi {
@@ -34,5 +43,34 @@ class AppModule {
             WeatherDatabase::class.java,
             WeatherDatabase.DATABASE_NAME
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(weatherApi: WeatherApi, queryDao: QueryDao): WeatherRepository {
+        return WeatherRepositoryImp(queryDao, weatherApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideQueryDao(weatherDatabase: WeatherDatabase): QueryDao {
+        return weatherDatabase.queryDao()
+    }
+
+    @Singleton
+    @Provides
+    fun getConnectivityInterceptor(@ApplicationContext context: Context): AppStatus {
+        return AppStatus(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(app)
+    }
+    @Provides
+    @Singleton
+    fun provideGetTables(repository: WeatherRepository): SearchWeatherUsecase {
+        return SearchWeatherUsecase(repository)
     }
 }

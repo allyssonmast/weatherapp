@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.remote.model
 
+import com.example.weatherapp.domain.model.Weather
 import com.google.gson.annotations.SerializedName
 
 data class WeatherResponse(
@@ -75,3 +76,16 @@ data class CurrentWeather(
     @SerializedName("visibility")
     val visibility: Number
 )
+
+fun mapWeatherResponseToWeather(weatherResponse: WeatherResponse): Weather {
+    val currentWeather = weatherResponse.current
+    return Weather(
+        iconUrl = currentWeather.weatherIcons.firstOrNull() ?: "",
+        temperature = currentWeather.temperature,
+        weatherDescription = currentWeather.weatherDescriptions.firstOrNull() ?: "",
+        windSpeed = currentWeather.windSpeed,
+        feelsLike = currentWeather.feelsLike,
+        humidity = currentWeather.humidity
+    )
+}
+
