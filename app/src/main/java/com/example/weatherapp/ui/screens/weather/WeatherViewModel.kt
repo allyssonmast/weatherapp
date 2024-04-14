@@ -1,7 +1,8 @@
-package com.example.weatherapp.ui.screens
+package com.example.weatherapp.ui.screens.weather
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
@@ -25,18 +26,17 @@ class WeatherViewModel @Inject constructor(
 
     init {
         onStartApplication()
-        print("iniciou")
     }
     private fun onStartApplication() {
         viewModelScope.launch {
-            val isConnected = getConnectivity.isConnected()
-            if (!isConnected) {
-                _weatherState.value = WeatherState(error = "No internet connection")
+            val hasInternetConnection = getConnectivity.isConnected()
+            if (!hasInternetConnection) {
+                _weatherState.value = WeatherState(isConnected = false)
                 return@launch
             }
-            val query = getUserLocation()
-            val que= query
-
+            getUserLocation()?.let {
+                getWeatherByName(it)
+            }
         }
     }
     fun getWeatherByName (query: String){

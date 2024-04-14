@@ -9,7 +9,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,10 +16,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.ui.navigatioin.router.Screen
-import com.example.weatherapp.ui.screens.WeatherScreen
-import com.example.weatherapp.ui.screens.WeatherState
-import com.example.weatherapp.ui.screens.WeatherViewModel
+import com.example.weatherapp.ui.screens.weather.WeatherScreen
+import com.example.weatherapp.ui.screens.weather.WeatherState
+import com.example.weatherapp.ui.screens.weather.WeatherViewModel
 import com.example.weatherapp.util.theme.WeatherAppTheme
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,10 +51,9 @@ class MainActivity : ComponentActivity() {
                         ){
                             val viewModel = hiltViewModel<WeatherViewModel>()
                             val state: WeatherState by viewModel.weatherState
-
                             WeatherScreen(
                                 navController = navController,
-                                state =state
+                                state =state,
                             )
                         }
                         /*

@@ -5,5 +5,5 @@ import com.example.weatherapp.util.Resource
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherRepository {
-    fun getWeather(query: String): Flow<Resource<Weather>>
+    suspend fun getWeather(query: String): Resource<Weather>
 }

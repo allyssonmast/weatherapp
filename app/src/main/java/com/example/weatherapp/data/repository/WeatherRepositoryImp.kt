@@ -20,26 +20,25 @@ class WeatherRepositoryImp @Inject constructor(
     private val queryDao: QueryDao,
     private val weatherApi: WeatherApi
 ) :WeatherRepository{
-    override fun getWeather(query: String): Flow<Resource<Weather>> = flow {
-        emit(Resource.Loading())
-        try {
-            val response = weatherApi.getCurrentWeather(query = query)
-            if (response.isSuccessful) {
-                val weatherResponse = response.body()!!
-                queryDao.insertQuery(QueryEntity(query = query))
-                emit(Resource.Success(mapWeatherResponseToWeather(weatherResponse)))
-            } else {
-                val errorBody = response.errorBody()?.string()
-                val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
-                emit(Resource.Error(errorResponse?.error?.info ?: "Unknown API error"))
+    override suspend fun getWeather(query: String): Resource<Weather>{
+            try {
+                val response = weatherApi.getCurrentWeather(query = query)
+                return if (response.isSuccessful) {
+                    val weatherResponse = response.body()!!
+                    queryDao.insertQuery(QueryEntity(query = query))
+                    Resource.Success(mapWeatherResponseToWeather(weatherResponse))
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
+                    Resource.Error(errorResponse?.error?.info ?: "Unknown API error")
+                }
+            } catch (e: IOException) {
+                return Resource.Error("Network error: ${e.message}")
+            } catch (e: HttpException) {
+                return Resource.Error("HTTP error: ${e.code()}")
+            } catch (e: Exception) {
+                return Resource.Error("Unexpected error: ${e.message}")
             }
-        } catch (e: IOException) {
-            emit(Resource.Error("Network error: ${e.message}"))
-        } catch (e: HttpException) {
-            emit(Resource.Error("HTTP error: ${e.code()}"))
-        } catch (e: Exception) {
-            emit(Resource.Error("Unexpected error: ${e.message}"))
-        }
     }
 
 }
