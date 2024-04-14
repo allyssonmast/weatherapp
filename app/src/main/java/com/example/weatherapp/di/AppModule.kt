@@ -4,12 +4,8 @@ import DefaultLocationTracker
 import android.app.Application
 import android.content.Context
 import android.location.Geocoder
-import androidx.room.Room
 import com.example.weatherapp.data.geocoder.GeoCoding
-import com.example.weatherapp.data.local.QueryDao
-import com.example.weatherapp.data.local.WeatherDatabase
 import com.example.weatherapp.data.remote.WeatherApi
-import com.example.weatherapp.data.remote.model.Location
 import com.example.weatherapp.data.repository.WeatherRepositoryImp
 import com.example.weatherapp.domain.location.LocationTracker
 import com.example.weatherapp.domain.repository.WeatherRepository
@@ -25,7 +21,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -37,32 +35,20 @@ object AppModule {
     fun providePaprikaApi(): WeatherApi {
         return Retrofit.Builder()
             .baseUrl(ApiConstants.BASE_URL)
+            .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(WeatherApi::class.java)
     }
 
-    @Provides
-    @Singleton
-    fun provideNoteDatabase(app: Application): WeatherDatabase {
-        return Room.databaseBuilder(
-            app,
-            WeatherDatabase::class.java,
-            WeatherDatabase.DATABASE_NAME
-        ).build()
-    }
 
     @Provides
     @Singleton
-    fun provideWeatherRepository(weatherApi: WeatherApi, queryDao: QueryDao): WeatherRepository {
-        return WeatherRepositoryImp(queryDao, weatherApi)
+    fun provideWeatherRepository(weatherApi: WeatherApi): WeatherRepository {
+        return WeatherRepositoryImp(weatherApi)
     }
 
-    @Provides
-    @Singleton
-    fun provideQueryDao(weatherDatabase: WeatherDatabase): QueryDao {
-        return weatherDatabase.queryDao()
-    }
 
     @Singleton
     @Provides
@@ -75,26 +61,35 @@ object AppModule {
     fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient {
         return LocationServices.getFusedLocationProviderClient(app)
     }
+
     @Provides
     @Singleton
     fun provideSearchWeatherUsecase(repository: WeatherRepository): SearchWeatherUsecase {
         return SearchWeatherUsecase(repository)
     }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     @Provides
     @Singleton
-    fun provideLocationTracker(locationClient: FusedLocationProviderClient, application: Application): LocationTracker {
-        return DefaultLocationTracker(locationClient,application)
+    fun provideLocationTracker(
+        locationClient: FusedLocationProviderClient,
+        application: Application
+    ): LocationTracker {
+        return DefaultLocationTracker(locationClient, application)
     }
 
     @Provides
     @Singleton
-    fun provideGetLocationAndCityName(location: LocationTracker, geoCoding: GeoCoding): GetUserLocationAndCityNameUseCase {
-        return GetUserLocationAndCityNameUseCase(location,geoCoding)
+    fun provideGetLocationAndCityName(
+        location: LocationTracker,
+        geoCoding: GeoCoding
+    ): GetUserLocationAndCityNameUseCase {
+        return GetUserLocationAndCityNameUseCase(location, geoCoding)
     }
+
     @Singleton
     @Provides
-    fun getGeoCoding( @ApplicationContext context: Context): GeoCoding {
+    fun getGeoCoding(@ApplicationContext context: Context): GeoCoding {
         return GeoCoding(Geocoder(context))
     }
 }

@@ -1,7 +1,5 @@
 package com.example.weatherapp.domain.usecase
 
-import android.content.Context
-import android.location.Location
 import com.example.weatherapp.data.geocoder.GeoCoding
 import com.example.weatherapp.domain.location.LocationTracker
 import javax.inject.Inject

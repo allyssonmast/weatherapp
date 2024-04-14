@@ -16,7 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.weatherapp.ui.components.InternetConnectionDialog
 
-@ExperimentalMaterial3Api
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
     navController: NavController,
