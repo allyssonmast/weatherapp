@@ -6,5 +6,10 @@ data class Weather(
     val weatherDescription: String,
     val windSpeed: Number,
     val feelsLike: Number,
-    val humidity: Number
+    val humidity: Number,
+    val name: String,
+    val country: String,
+    val localtime: String,
+    val uvIndex: Number,
+    val observationTime: String,
 )

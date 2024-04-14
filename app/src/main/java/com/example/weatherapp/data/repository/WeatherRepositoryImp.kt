@@ -1,7 +1,7 @@
 package com.example.weatherapp.data.repository
 
 import com.example.weatherapp.data.remote.WeatherApi
-import com.example.weatherapp.data.remote.model.mapWeatherResponseToWeather
+import com.example.weatherapp.data.remote.model.toWeather
 import com.example.weatherapp.domain.model.Weather
 import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.util.Resource
@@ -20,8 +20,7 @@ class WeatherRepositoryImp @Inject constructor(
             val response = weatherApi.getCurrentWeather(query = query)
             return if (response.isSuccessful) {
                 val weatherResponse = response.body()!!
-
-                Resource.Success(mapWeatherResponseToWeather(weatherResponse))
+                Resource.Success(weatherResponse.toWeather())
             } else {
                 val errorBody = response.errorBody()?.string()
                 val errorResponse = Gson().fromJson(errorBody, ErrorResponse::class.java)
@@ -32,7 +31,7 @@ class WeatherRepositoryImp @Inject constructor(
         } catch (e: HttpException) {
             return Resource.Error("HTTP error: ${e.code()}")
         } catch (e: Exception) {
-            return Resource.Error("Unexpected error: ${e.message}")
+            return Resource.Error("Unexpected error")
         }
     }
 }

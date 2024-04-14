@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.screens.weather
+package com.example.weatherapp.ui.weather
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.example.weatherapp.domain.usecase.GetConnectivity
 import com.example.weatherapp.domain.usecase.GetUserLocationAndCityNameUseCase
 import com.example.weatherapp.util.Resource
 import kotlinx.coroutines.launch
@@ -15,7 +14,6 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
     private val searchWeatherUseCase: SearchWeatherUsecase,
-    private val getConnectivity: GetConnectivity,
     private val getUserLocation: GetUserLocationAndCityNameUseCase
 ) : ViewModel() {
 
@@ -28,26 +26,43 @@ class WeatherViewModel @Inject constructor(
 
     private fun onStartApplication() {
         viewModelScope.launch {
-            val hasInternetConnection = getConnectivity.isConnected()
-            if (!hasInternetConnection) {
-                _weatherState.value = WeatherState(isConnected = false, isLoading = false)
-                return@launch
-            }
-            getUserLocation()?.let {
-                getWeatherByName(it)
-            }
+            getWeatherByUserLocation()
         }
     }
 
-    suspend fun getWeatherByName(query: String) {
+    private suspend fun getWeatherByUserLocation() {
+        val cityNameResource = getUserLocation()
+        if (cityNameResource is Resource.Success) {
+            getWeatherByName(cityNameResource.data)
+        } else {
+            _weatherState.value = WeatherState(
+                error = cityNameResource.message,
+                isLoading = false,
+            )
+        }
+    }
+
+    private suspend fun getWeatherByName(query: String?) {
         when (val resource = searchWeatherUseCase(query)) {
             is Resource.Success -> {
-                _weatherState.value = WeatherState(weather = resource.data, isLoading = false)
+                _weatherState.value =
+                    WeatherState(weather = resource.data, isLoading = false, isConnected = true)
             }
+
+            is Resource.InternetConnection -> {
+                _weatherState.value =
+                    WeatherState(isLoading = false, isConnected = false)
+            }
+
             is Resource.Error -> {
                 _weatherState.value =
-                    WeatherState(error = resource.message ?: "Unknown error", isLoading = false)
+                    WeatherState(
+                        error = resource.message ?: "Unknown error",
+                        isLoading = false,
+                        isConnected = true
+                    )
             }
+
             is Resource.Loading -> {
                 _weatherState.value = WeatherState(isLoading = true)
             }

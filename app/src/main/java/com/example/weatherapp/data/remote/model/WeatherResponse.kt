@@ -77,15 +77,21 @@ data class CurrentWeather(
     val visibility: Number
 )
 
-fun mapWeatherResponseToWeather(weatherResponse: WeatherResponse): Weather {
-    val currentWeather = weatherResponse.current
+fun WeatherResponse.toWeather(): Weather {
+    val currentWeather = current
+    val currenteLocation = location
     return Weather(
         iconUrl = currentWeather.weatherIcons.firstOrNull() ?: "",
         temperature = currentWeather.temperature,
         weatherDescription = currentWeather.weatherDescriptions.firstOrNull() ?: "",
         windSpeed = currentWeather.windSpeed,
         feelsLike = currentWeather.feelsLike,
-        humidity = currentWeather.humidity
+        humidity = currentWeather.humidity,
+        uvIndex = currentWeather.uvIndex,
+        observationTime = currentWeather.observationTime,
+        name = currenteLocation.name,
+        country = currenteLocation.country,
+        localtime = currenteLocation.localtime,
     )
 }
 

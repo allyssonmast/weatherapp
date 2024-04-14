@@ -1,10 +1,10 @@
-package com.example.weatherapp.ui.screens.weather
+package com.example.weatherapp.ui.weather
 
 import com.example.weatherapp.domain.model.Weather
 
 data class WeatherState(
     val isLoading: Boolean = false,
     val weather: Weather? = null,
-    val isConnected:Boolean=true,
+    val isConnected:Boolean=false,
     val error: String? = null
 )

@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.screens.weather
+package com.example.weatherapp.ui.weather
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.weatherapp.ui.components.InternetConnectionDialog
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +49,7 @@ fun WeatherScreen(
             )
         }
     ) { paddingValues ->
-        val openDialog = remember { mutableStateOf(!state.isConnected) }
+        val openDialog = remember { mutableStateOf(!state.isConnected && !state.isLoading) }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -80,7 +81,7 @@ fun WeatherScreen(
                     CircularProgressIndicator()
                 }
             }
-            if (!state.isConnected)
+            if (!state.isConnected && !state.isLoading)
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier

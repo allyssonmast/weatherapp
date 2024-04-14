@@ -15,7 +15,7 @@ class AppStatus @Inject constructor(
             val nw      = connectivityManager.activeNetwork ?: return false
             val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
             return when {
-                actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+                //actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
                 actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
                 else -> false
