@@ -53,7 +53,7 @@ The Weather App is a simple application that provides weather information based 
 - Manual refresh option available.
 
 
-<video width="250" controls>
+<video width="250" height="315" controls>
   <source src="video_exemple/exemple.webm" type="video/webm">
   Your browser does not support the video tag.
 </video>
