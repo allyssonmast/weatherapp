@@ -20,11 +20,7 @@ class WeatherViewModel @Inject constructor(
     private val _weatherState = mutableStateOf(WeatherState(isLoading = true))
     val weatherState: State<WeatherState> = _weatherState
 
-    init {
-        onStartApplication()
-    }
-
-    private fun onStartApplication() {
+    fun onStartApplication() {
         viewModelScope.launch {
             getWeatherByUserLocation()
         }

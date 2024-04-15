@@ -89,9 +89,11 @@ fun WeatherScreen(
                     update = {state.city?.let { onSearch(it) }}
                 )
             }
-            state.error?.let { error ->
+            if (state.error != null && state.isConnected) {
                 Text(
-                    text = error, color = Color.Red, modifier = Modifier.align(Alignment.Center)
+                    text = state.error,
+                    color = Color.Red,
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
 
