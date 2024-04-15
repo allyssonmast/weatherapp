@@ -52,6 +52,13 @@ The Weather App is a simple application that provides weather information based 
 - Allows the user to search for a specific city.
 - Manual refresh option available.
 
+
+<video width="250" controls>
+  <source src="video_exemple/exemple.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+
 ## API
 
 This application utilizes the WeatherStack API to fetch weather data. You can sign up for a free API key on the [official website](https://weatherstack.com/documentation).

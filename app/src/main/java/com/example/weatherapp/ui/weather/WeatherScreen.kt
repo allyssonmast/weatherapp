@@ -31,7 +31,7 @@ fun WeatherScreen(
     val text = remember { mutableStateOf("") }
     val active = remember { mutableStateOf(false) }
     val items = remember {
-        mutableStateListOf("Natal")
+        mutableStateListOf("São Paulo")
     }
     val openDialog = remember { mutableStateOf(!state.isConnected && !state.isLoading) }
         Box(
@@ -89,7 +89,7 @@ fun WeatherScreen(
                     update = {state.city?.let { onSearch(it) }}
                 )
             }
-            if (state.error != null && state.isConnected) {
+            if (state.error != null) {
                 Text(
                     text = state.error,
                     color = Color.Red,
@@ -103,15 +103,6 @@ fun WeatherScreen(
                 ) {
                     CircularProgressIndicator()
                 }
-            }
-            if (!state.isConnected && !state.isLoading) Box(
-                contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = "Try again, no internet connection",
-                    color = Color.Red,
-                    modifier = Modifier.align(Alignment.Center)
-                )
             }
 
             if (openDialog.value) InternetConnectionDialog(onDismissButton = {
