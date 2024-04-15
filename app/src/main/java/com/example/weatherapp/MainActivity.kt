@@ -9,11 +9,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,10 +20,11 @@ import com.example.weatherapp.domain.model.Weather
 import com.example.weatherapp.router.Screen
 import com.example.weatherapp.ui.weather.WeatherScreen
 import com.example.weatherapp.ui.weather.WeatherState
-import com.example.weatherapp.ui.weather.WeatherViewModel
 import com.example.weatherapp.util.theme.WeatherAppTheme
 
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import com.example.weatherapp.ui.weather.WeatherViewModel as WeatherViewModel1
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,6 +47,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.primary
                 ) {
                     val navController = rememberNavController()
+
                     NavHost(
                         navController = navController,
                         startDestination = Screen.WeatherScreen.route
@@ -54,11 +55,18 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Screen.WeatherScreen.route
                         ) {
-                            //val viewModel = hiltViewModel<WeatherViewModel>()
+                            // val viewModel = hiltViewModel<WeatherViewModel1>()
+                            // val state: WeatherState by viewModel.weatherState
+
                             val state: WeatherState = fakeWeatherState
+                            //val onSearch: (String) -> Unit = { query ->
+                            //    viewModel.viewModelScope.launch {
+                            //       viewModel.getWeatherByName(query)
+                            //    }
+                            // }
                             WeatherScreen(
-                                navController = navController,
                                 state = state,
+                                onSearch = {}
                             )
                         }
                         /*

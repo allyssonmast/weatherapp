@@ -1,3 +1,4 @@
+package com.example.weatherapp.util.constants
 
 import com.example.weatherapp.BuildConfig
 

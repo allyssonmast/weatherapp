@@ -42,7 +42,8 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getWeatherByName(query: String?) {
+    suspend fun getWeatherByName(query: String?) {
+        WeatherState(isLoading = true)
         when (val resource = searchWeatherUseCase(query)) {
             is Resource.Success -> {
                 _weatherState.value =

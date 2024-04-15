@@ -13,6 +13,7 @@ import com.example.weatherapp.util.connetivity.GetConnectivity
 import com.example.weatherapp.domain.usecase.GetUserLocationAndCityNameUseCase
 import com.example.weatherapp.domain.usecase.SearchWeatherUsecase
 import com.example.weatherapp.util.connetivity.AppStatus
+import com.example.weatherapp.util.constants.ApiConstants
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
