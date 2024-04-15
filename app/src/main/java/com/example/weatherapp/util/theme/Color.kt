@@ -13,6 +13,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val colorBg1 = Color(0xff08203e)
 val colorBg2 = Color(0xff557c93)
+val colorBg3 = Color(0xff2e4e69)
 
 val gradient = Brush.linearGradient(
     colors = listOf(colorBg1, colorBg2),

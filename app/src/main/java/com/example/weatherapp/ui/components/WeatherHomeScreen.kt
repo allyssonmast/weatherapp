@@ -21,7 +21,8 @@ import com.example.weatherapp.util.format.formatarData
 
 @Composable
 fun WeatherHomeScreen(
-    weather: Weather
+    weather: Weather,
+    update: () -> Unit
 ) {
     Box(
         modifier = Modifier.padding(24.dp)
@@ -87,6 +88,9 @@ fun WeatherHomeScreen(
                     temp = "${weather.windSpeed} m/s"
                 )
             }
+            ElevatedButton(
+                onClick = { update() }
+            ) { Text("Update") }
         }
     }
 
@@ -94,14 +98,17 @@ fun WeatherHomeScreen(
 
 @Composable
 fun ImageWeather(icon: String) {
-    AsyncImage(
-        model = icon,
-        contentDescription = icon,
-        modifier = Modifier
-            .height(200.dp)
-            .width(200.dp),
-        contentScale = ContentScale.FillBounds
-    )
+    Card() {
+        AsyncImage(
+            model = icon,
+            contentDescription = icon,
+            modifier = Modifier
+                .height(200.dp)
+                .width(200.dp),
+            contentScale = ContentScale.FillBounds
+        )
+    }
+
 }
 
 @Composable
@@ -114,6 +121,7 @@ fun CustomerDivider() {
             .height(40.dp)
     )
 }
+
 @Composable
 fun CustomerDividerHor() {
     HorizontalDivider(

@@ -55,28 +55,19 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = Screen.WeatherScreen.route
                         ) {
-                            // val viewModel = hiltViewModel<WeatherViewModel1>()
-                            // val state: WeatherState by viewModel.weatherState
+                            val viewModel = hiltViewModel<WeatherViewModel1>()
+                            val state: WeatherState by viewModel.weatherState
 
-                            val state: WeatherState = fakeWeatherState
-                            //val onSearch: (String) -> Unit = { query ->
-                            //    viewModel.viewModelScope.launch {
-                            //       viewModel.getWeatherByName(query)
-                            //    }
-                            // }
+                            val onSearch: (String) -> Unit = { query ->
+                                viewModel.viewModelScope.launch {
+                                    viewModel.getWeatherByName(query)
+                                }
+                            }
                             WeatherScreen(
                                 state = state,
-                                onSearch = {}
+                                onSearch = { onSearch(it) }
                             )
                         }
-                        /*
-                        composable(
-                            route = Screen.CustomersScreen.route+"/{tableId}"
-                        ){
-                            CustomersScreen(navController)
-                        }
-
-                         */
                     }
                 }
             }

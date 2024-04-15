@@ -47,7 +47,7 @@ class WeatherViewModel @Inject constructor(
         when (val resource = searchWeatherUseCase(query)) {
             is Resource.Success -> {
                 _weatherState.value =
-                    WeatherState(weather = resource.data, isLoading = false, isConnected = true)
+                    WeatherState(weather = resource.data, isLoading = false, isConnected = true, city = query)
             }
 
             is Resource.InternetConnection -> {
