@@ -58,10 +58,10 @@ This application utilizes the WeatherStack API to fetch weather data. You can si
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
 
-If you have any questions, suggestions, or issues, feel free to contact us at your-email@example.com.
+If you have any questions, suggestions, or issues, feel free to contact us at allysson-m@hotmail.com.
 
 Stay updated on the project by following [our GitHub page](https://github.com/allyssonmast/weatherapp).
